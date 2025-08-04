@@ -1,0 +1,48 @@
+name: Build-and-Publish
+
+on:
+  push:
+    tags: ["v*.*.*"]          # every git tag that looks like v1.2.3
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with: {fetch-depth: 0}    # keeps full history so `git describe` works
+
+      - name: Install build deps
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential ninja-build cmake libpcl-dev libopencv-dev libboost-system-dev libboost-filesystem-dev
+
+      - name: Configure CMake
+        run: cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build
+        run: cmake --build build --target all
+
+      - name: Package (.deb + .tar.gz)
+        run: |
+          cmake --build build --target package
+          ls -1 build # debug visibility
+
+      # ----------  Publish to the GitHub Release ----------
+      # If the tag was created via the UI "Draft new release", skip create-release.
+      - name: Create (or reuse) GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload assets
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            build/*.deb
+            build/*.tar.gz
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

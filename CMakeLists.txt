@@ -59,3 +59,17 @@ endif()
 
 # Install binary to system path
 install(TARGETS ${PROJECT_NAME} DESTINATION bin)
+
+# CPack configuration for .deb package
+set(CPACK_GENERATOR "DEB")
+set(CPACK_PACKAGE_NAME "j-pcd2depthcolor")
+set(CPACK_PACKAGE_VERSION "1.0.0")
+set(CPACK_PACKAGE_CONTACT "maintainer@example.com")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "PCD to depth color converter")
+set(CPACK_PACKAGE_DESCRIPTION "A tool to convert PCD files to depth color images")
+set(CPACK_DEBIAN_PACKAGE_DEPENDS "libpcl-dev, libopencv-dev, libboost-system-dev, libboost-filesystem-dev")
+set(CPACK_DEBIAN_PACKAGE_SECTION "utils")
+set(CPACK_DEBIAN_PACKAGE_PRIORITY "optional")
+set(CPACK_PACKAGE_VENDOR "Your Organization")
+set(CPACK_DEBIAN_FILE_NAME DEB-DEFAULT)
+include(CPack)
