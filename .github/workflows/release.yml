@@ -6,6 +6,9 @@ on:
   release:
     types: [published]        # triggers when release is published via GitHub UI
 
+permissions:
+  contents: write           # required for creating releases and uploading assets
+
 jobs:
   build:
     runs-on: ubuntu-24.04
