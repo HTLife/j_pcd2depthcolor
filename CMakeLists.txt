@@ -60,10 +60,24 @@ endif()
 # Install binary to system path
 install(TARGETS ${PROJECT_NAME} DESTINATION bin)
 
+# Get version from git tag
+execute_process(
+    COMMAND git describe --tags --abbrev=0
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    OUTPUT_VARIABLE GIT_TAG
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+    ERROR_QUIET
+)
+
+# Fallback version if no git tag found
+if(NOT GIT_TAG)
+    set(GIT_TAG "0.1.0")
+endif()
+
 # CPack configuration for .deb package
 set(CPACK_GENERATOR "DEB")
 set(CPACK_PACKAGE_NAME "j-pcd2depthcolor")
-set(CPACK_PACKAGE_VERSION "1.0.0")
+set(CPACK_PACKAGE_VERSION "${GIT_TAG}")
 set(CPACK_PACKAGE_CONTACT "maintainer@example.com")
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "PCD to depth color converter")
 set(CPACK_PACKAGE_DESCRIPTION "A tool to convert PCD files to depth color images")
