@@ -2,7 +2,9 @@ name: Build-and-Publish
 
 on:
   push:
-    tags: ["v*.*.*"]          # every git tag that looks like v1.2.3
+    tags: ["*.*.*"]           # every git tag that looks like 1.2.3
+  release:
+    types: [published]        # triggers when release is published via GitHub UI
 
 jobs:
   build:
